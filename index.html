@@ -3,45 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a Lakeness1</title>
+    <title>lakeness1.com</title>
     <style>
+        /* --- PALETA DE COLORES (Cozy / Lo-Fi) --- */
+        :root {
+            /* TEMA CLARO (Latte Morning) */
+            --bg-color: #f3f0e9; /* Crema suave */
+            --card-bg: #fdfbf7;  /* Papel blanco cálido */
+            --text-main: #4a403a; /* Café oscuro */
+            --text-muted: #8c8279; /* Taupe */
+            --accent: #d4a373;   /* Caramelo */
+            --shadow: rgba(74, 64, 58, 0.08);
+            --grain-opacity: 0.04;
+            --btn-border: #dcd6d0;
+        }
+
+        [data-theme="dark"] {
+            /* TEMA OSCURO (Midnight Jazz) */
+            --bg-color: #1e1e20; /* Carbón suave */
+            --card-bg: #2b2b2e;  /* Gris cálido */
+            --text-main: #e6e1dc; /* Blanco hueso */
+            --text-muted: #9f9b96; /* Gris piedra */
+            --accent: #a5a58d;   /* Verde oliva apagado */
+            --shadow: rgba(0, 0, 0, 0.3);
+            --grain-opacity: 0.07;
+            --btn-border: #444448;
+        }
+
+        /* --- CONFIGURACIÓN BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease; }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Georgia', 'Times New Roman', serif; /* Serif para el toque estético */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- TEXTURA DE RUIDO (Noise Overlay) --- */
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: var(--grain-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- FORMAS FLOTANTES SUAVES --- */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out;
+        }
+        .blob-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; opacity: 0.3; }
+        .blob-2 { width: 300px; height: 300px; background: #e0d0c1; bottom: -50px; right: -50px; opacity: 0.4; animation-delay: -5s; }
+        
+        [data-theme="dark"] .blob-2 { background: #3c3c40; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        /* --- TARJETA PRINCIPAL (Estilo Editorial/Papel) --- */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: var(--card-bg);
+            padding: 60px 50px;
+            width: 85%;
+            max-width: 400px;
+            border-radius: 4px; /* Bordes más rectos estilo tarjeta postal */
+            box-shadow: 0 20px 40px var(--shadow);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            /* Borde sutil */
+            border: 1px solid rgba(0,0,0,0.02);
         }
-        .container {
-            border: 1px solid #333;
-            padding: 40px;
-            border-radius: 10px;
-            background-color: #1e1e1e;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+
+        /* Decoración de cinta/tape superior */
+        .tape {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transform: translateX(-50%) rotate(-2deg);
+            opacity: 0.6;
         }
-        h1 { color: #bb86fc; }
-        p { font-size: 1.2rem; }
+
+        /* --- TIPOGRAFÍA --- */
+        .date {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            font-weight: 400;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+
+        .divider {
+            width: 40px;
+            height: 1px;
+            background-color: var(--accent);
+            margin: 10px 0;
+        }
+
         .status {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #03dac6;
-            color: #000;
-            border-radius: 20px;
-            font-weight: bold;
+            font-family: 'Courier New', monospace; /* Monospaced para toque retro */
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        /* Pequeño punto parpadeante suave */
+        .dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: breathe 4s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* --- BOTÓN DE TEMA (Estilo Etiqueta/Tag) --- */
+        .theme-btn {
+            position: absolute;
+            bottom: 40px;
+            background: var(--card-bg); /* Fondo de papel */
+            border: 1px dashed var(--btn-border); /* Borde punteado como costura */
+            color: var(--text-muted);
+            padding: 10px 24px;
+            border-radius: 50px; /* Redondeado suave */
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 20;
+            box-shadow: 0 4px 15px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            color: var(--text-main);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .icon-star {
+            font-size: 1.1em;
+            line-height: 0;
+        }
+
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Hola, soy Lake</h1>
-        <p>Este dominio <strong>lakeness1.com</strong> ya está funcionando.</p>
-        <p>Próximamente aquí: Mods, Proyectos y más.</p>
-        <div class="status">Estado: En Construcción 🛠️</div>
+<body data-theme="light"> <!-- Inicia en modo claro por defecto para el estilo aesthetic -->
+
+    <!-- Textura de ruido -->
+    <div class="noise"></div>
+    
+    <!-- Manchas de color de fondo -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="card">
+        <div class="tape"></div>
+        
+        <!-- Fecha automática -->
+        <div class="date" id="dateDisplay">Nov 29</div>
+        
+        <h1 class="title">lakeness1</h1>
+        
+        <div class="divider"></div>
+        
+        <div class="status">
+            <span class="dot"></span>
+            online & cozy
+        </div>
     </div>
+
+    <!-- Botón estilo etiqueta -->
+    <button class="theme-btn" onclick="toggleTheme()">
+        <span class="icon-star">✦</span> theme switch
+    </button>
+
+    <script>
+        const body = document.body;
+        const dateDisplay = document.getElementById('dateDisplay');
+
+        // Configurar fecha actual
+        const today = new Date();
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        dateDisplay.innerText = today.toLocaleDateString('en-US', options).toLowerCase(); // Minúsculas para estética
+
+        // Lógica de tema (Persistente)
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+    </script>
 </body>
 </html>
