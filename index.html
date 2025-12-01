@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Logística Lake - Inventario Nexxus</title>
-    
+    <title>Logística Lakeness - Inventario Nexxus</title>
+
     <!-- 1. Cargar Tailwind CSS y Configuración -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -22,7 +23,7 @@
                         'spin-slow': 'spin 8s linear infinite',
                     },
                     screens: {
-                        'xs': '375px', 
+                        'xs': '375px',
                     }
                 }
             }
@@ -36,64 +37,164 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
-        } catch (e) {}
+        } catch (e) { }
     </script>
-    
+
     <!-- 2. Cargar Librería XLSX -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* --- SISTEMA DE ANIMACIONES --- */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes scaleOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
-        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes scaleOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
         /* Animación específica para el Modal en Móvil (Slide desde abajo) */
-        @keyframes slideUpMobile { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes slideDownMobile { from { transform: translateY(0); } to { transform: translateY(100%); } }
+        @keyframes slideUpMobile {
+            from {
+                transform: translateY(100%);
+            }
 
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        .animate-scale-in { animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        .animate-fade-out { animation: fadeOut 0.2s ease-in forwards; }
-        .animate-scale-out { animation: scaleOut 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDownMobile {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(100%);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-fade-out {
+            animation: fadeOut 0.2s ease-in forwards;
+        }
+
+        .animate-scale-out {
+            animation: scaleOut 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
         /* Clases para el modal tipo Bottom Sheet */
-        .mobile-sheet-enter { animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .mobile-sheet-exit { animation: slideDownMobile 0.3s ease-in forwards; }
+        .mobile-sheet-enter {
+            animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
 
-        .delay-0 { animation-delay: 0ms; }
-        .delay-100 { animation-delay: 100ms; }
+        .mobile-sheet-exit {
+            animation: slideDownMobile 0.3s ease-in forwards;
+        }
+
+        .delay-0 {
+            animation-delay: 0ms;
+        }
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
     </style>
 </head>
-<body class="bg-lake-light dark:bg-lake-dark text-stone-600 dark:text-stone-300 selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-500 overscroll-none">
+
+<body
+    class="bg-lake-light dark:bg-lake-dark text-stone-600 dark:text-stone-300 selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-500 overscroll-none">
     <div id="root"></div>
 
     <script type="module">
         import React, { useState, useEffect, useRef } from 'https://esm.sh/react@18.2.0';
         import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
-        import { 
-            Truck, ClipboardList, Save, X, Download, Upload, 
-            AlertTriangle, CheckCircle, MoreHorizontal, Box, 
-            Wifi, WifiOff, ChevronDown, Sparkles, FileSpreadsheet, 
-            Moon, Sun, Settings, Wrench, FileText, ArrowRight, 
+        import {
+            Truck, ClipboardList, Save, X, Download, Upload,
+            AlertTriangle, CheckCircle, MoreHorizontal, Box,
+            Wifi, WifiOff, ChevronDown, Sparkles, FileSpreadsheet,
+            Moon, Sun, Settings, Wrench, FileText, ArrowRight,
             Eraser, Trash2, LayoutGrid, Grid, Menu
         } from 'https://esm.sh/lucide-react@0.263.1';
 
         // --- CONSTANTES ---
         const DOCK_COUNT = 18;
-        const YARD_COUNT = 20; 
+        const YARD_COUNT = 20;
         const SHIFTS = [1, 2, 3];
-        const STORAGE_KEY = 'lake_logistica_inventory_v22_responsive_fix'; 
+        const STORAGE_KEY = 'lake_logistica_inventory_v22_responsive_fix';
         const THEME_KEY = 'lake_theme_preference';
 
-        const SIZES = ['53', '48', '40', '3.5']; 
-        const DOCK_STATUSES = ['Vacía', 'Enrampada', 'Frenteada', 'Cargada']; 
+        const SIZES = ['53', '48', '40', '3.5'];
+        const DOCK_STATUSES = ['Vacía', 'Enrampada', 'Frenteada', 'Cargada'];
         const YARD_STATUSES = ['Vacía', 'Cargada'];
 
         const emptySlotData = {
@@ -102,9 +203,9 @@
         };
 
         const generateInitialData = () => ({
-            1: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D1-${i+1}`, number: i+1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y1-${i+1}`, number: i+1, type: 'yard' })) },
-            2: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D2-${i+1}`, number: i+1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y2-${i+1}`, number: i+1, type: 'yard' })) },
-            3: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D3-${i+1}`, number: i+1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y3-${i+1}`, number: i+1, type: 'yard' })) },
+            1: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D1-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y1-${i + 1}`, number: i + 1, type: 'yard' })) },
+            2: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D2-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y2-${i + 1}`, number: i + 1, type: 'yard' })) },
+            3: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D3-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y3-${i + 1}`, number: i + 1, type: 'yard' })) },
         });
 
         const DEFAULT_INVENTORY = generateInitialData();
@@ -113,7 +214,7 @@
         const SlotCard = ({ data, onClick, index, type }) => {
             const statusNorm = (data.status || '').toLowerCase().replace('.', '').trim();
             const isOccupied = statusNorm !== 'vacía' && statusNorm !== '';
-            
+
             let cardStyle = "bg-white dark:bg-stone-800 border-2 border-transparent dark:border-stone-700/50 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-500/30 text-stone-400 dark:text-stone-500 hover:shadow-lg dark:hover:shadow-black/40";
             let iconColor = "text-stone-300 dark:text-stone-600";
             let statusBadge = "bg-stone-100 dark:bg-stone-700 text-stone-500 dark:text-stone-400 border border-stone-200 dark:border-stone-600";
@@ -147,25 +248,25 @@
             return React.createElement('div', {
                 style: delayStyle,
                 onClick: () => onClick(index, type),
-                className: `relative p-4 rounded-[1.5rem] transition-all duration-500 ease-out cursor-pointer active:scale-95 flex flex-col justify-between h-36 sm:h-44 group animate-slide-up ${cardStyle}` 
+                className: `relative p-4 rounded-[1.5rem] transition-all duration-500 ease-out cursor-pointer active:scale-95 flex flex-col justify-between h-36 sm:h-44 group animate-slide-up ${cardStyle}`
             }, [
                 React.createElement('div', { key: 'header', className: "flex justify-between items-start" }, [
                     React.createElement('div', { key: 'info', className: "flex flex-col" }, [
                         React.createElement('span', { key: 'num', className: "font-black text-2xl sm:text-3xl tracking-tighter opacity-90 transition-transform group-hover:scale-105 origin-left text-stone-700 dark:text-stone-200" }, type === 'docks' ? `${data.number}` : `P${data.number}`),
                         React.createElement('span', { key: 'label', className: "text-[9px] sm:text-[10px] uppercase tracking-widest font-bold opacity-50 mt-0.5" }, type === 'docks' ? 'Andén' : 'Patio')
                     ]),
-                    isOccupied 
+                    isOccupied
                         ? React.createElement('div', { key: 'icon', className: `p-2 rounded-xl bg-stone-50 dark:bg-stone-900/50 shadow-inner ${iconColor} transition-transform group-hover:rotate-3 group-hover:scale-110 duration-300` }, React.createElement(Truck, { size: 18, strokeWidth: 1.5 }))
                         : React.createElement('div', { key: 'icon', className: `p-2 rounded-xl bg-stone-50 dark:bg-stone-900/50 ${iconColor} transition-transform group-hover:scale-110 duration-300` }, React.createElement(Box, { size: 18, strokeWidth: 1.5 }))
                 ]),
                 React.createElement('div', { key: 'details', className: "space-y-1" }, [
                     React.createElement('div', { key: 'eco', className: "text-sm sm:text-base font-bold truncate opacity-90 dark:opacity-100" }, ecoText),
                     data.line && React.createElement('div', { key: 'line', className: "text-[10px] sm:text-xs font-bold uppercase truncate opacity-60 dark:opacity-70 flex items-center gap-1" }, [
-                         React.createElement('span', { className: "w-1 h-1 rounded-full bg-current opacity-40" }), data.line
+                        React.createElement('span', { className: "w-1 h-1 rounded-full bg-current opacity-40" }), data.line
                     ]),
                     React.createElement('div', { key: 'status', className: `text-[9px] sm:text-[10px] font-extrabold px-2.5 py-1 rounded-full w-fit tracking-wide transition-all duration-300 ${statusBadge} mt-1.5` }, (data.status || 'Sin Asignar').toUpperCase())
                 ]),
-                (statusNorm === 'cargada' || statusNorm === 'frenteada') && React.createElement('div', { key: 'alert', className: "absolute top-3 right-3 transition-all duration-300 group-hover:scale-125" }, 
+                (statusNorm === 'cargada' || statusNorm === 'frenteada') && React.createElement('div', { key: 'alert', className: "absolute top-3 right-3 transition-all duration-300 group-hover:scale-125" },
                     data.sealRight ? React.createElement(CheckCircle, { size: 16, className: "text-emerald-500 fill-emerald-50" }) : React.createElement(AlertTriangle, { size: 16, className: "text-rose-500 fill-rose-50" })
                 )
             ]);
@@ -184,14 +285,14 @@
             });
 
             const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
-            
+
             // Estados UI
             const [settingsOpen, setSettingsOpen] = useState(false);
             const [isClosingSettings, setIsClosingSettings] = useState(false);
             const [cleanerOpen, setCleanerOpen] = useState(false);
             const [isClosingCleaner, setIsClosingCleaner] = useState(false);
             const [currentShift, setCurrentShift] = useState(1);
-            const [activeTab, setActiveTab] = useState('docks'); 
+            const [activeTab, setActiveTab] = useState('docks');
             const [modalOpen, setModalOpen] = useState(false);
             const [isClosingModal, setIsClosingModal] = useState(false);
             const [editingSlot, setEditingSlot] = useState(null);
@@ -205,8 +306,8 @@
             const [isClosingToast, setIsClosingToast] = useState(false);
             const [saveMessage, setSaveMessage] = useState("Guardado");
 
-            useEffect(() => { try { if (window.localStorage) localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory)); } catch (e) {} }, [inventory]);
-            
+            useEffect(() => { try { if (window.localStorage) localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory)); } catch (e) { } }, [inventory]);
+
             useEffect(() => {
                 const handleState = () => setIsOnline(navigator.onLine);
                 window.addEventListener('online', handleState); window.addEventListener('offline', handleState);
@@ -229,12 +330,12 @@
             const closeModalAnimated = () => { setIsClosingModal(true); setTimeout(() => { setModalOpen(false); setIsClosingModal(false); }, 280); };
             const closeSettingsAnimated = () => { setIsClosingSettings(true); setTimeout(() => { setSettingsOpen(false); setIsClosingSettings(false); }, 280); };
             const closeCleanerAnimated = () => { setIsClosingCleaner(true); setTimeout(() => { setCleanerOpen(false); setIsClosingCleaner(false); }, 280); };
-            
-            const triggerSaveFeedback = (msg = "Guardado") => { 
+
+            const triggerSaveFeedback = (msg = "Guardado") => {
                 setSaveMessage(msg);
-                setShowSaveToast(true); 
-                setIsClosingToast(false); 
-                setTimeout(() => { setIsClosingToast(true); setTimeout(() => { setShowSaveToast(false); setIsClosingToast(false); }, 300); }, 2000); 
+                setShowSaveToast(true);
+                setIsClosingToast(false);
+                setTimeout(() => { setIsClosingToast(true); setTimeout(() => { setShowSaveToast(false); setIsClosingToast(false); }, 300); }, 2000);
             };
 
             const handleClean = (scope, shift = null, type = null) => {
@@ -273,17 +374,17 @@
                 newInventory[currentShift][editingSlot.type][editingSlot.index] = updatedData;
                 setInventory(newInventory); closeModalAnimated(); triggerSaveFeedback();
             };
-            
+
             // FIX: Limpiar un solo slot ahora funciona correctamente
             const handleClearSlot = () => {
                 const newInventory = JSON.parse(JSON.stringify(inventory));
                 const originalId = newInventory[currentShift][editingSlot.type][editingSlot.index].id;
                 newInventory[currentShift][editingSlot.type][editingSlot.index] = { ...emptySlotData, id: originalId, number: formData.number, type: editingSlot.type };
-                setInventory(newInventory); 
-                closeModalAnimated(); 
+                setInventory(newInventory);
+                closeModalAnimated();
                 triggerSaveFeedback("Espacio Liberado");
             };
-            
+
             // Export/Import (Mismo código estable de V18)
             const exportToExcel = () => {
                 if (!window.XLSX) return alert("Cargando...");
@@ -297,7 +398,7 @@
                 const wsData = [[{ v: "Inventario Nexxus", s: titleStyle }]];
                 wsData.push(["Ubicación", "FT", "Eco.", "Línea", "Sello #1", "Sello #2", "Status", "Observaciones"].map(h => ({ v: h, s: headerStyle })));
                 currentData.docks.forEach(slot => {
-                    const isFrenteada = (slot.status || '').toLowerCase() === 'frenteada'; const show = !isFrenteada; 
+                    const isFrenteada = (slot.status || '').toLowerCase() === 'frenteada'; const show = !isFrenteada;
                     wsData.push([{ v: `Andén ${slot.number}`, s: dataStyle }, { v: show ? slot.size : '', s: dataStyle }, { v: show ? slot.eco : '', s: dataStyle }, { v: show ? slot.line : '', s: dataStyle }, { v: show ? slot.sealLeft : '', s: dataStyle }, { v: show ? slot.sealRight : '', s: dataStyle }, { v: show && slot.status !== 'Vacía' ? (slot.status + '.') : '', s: dataStyle }, { v: show ? slot.observations : '', s: dataStyle }]);
                 });
                 const sepRow = new Array(8).fill({ v: "", s: {} }); sepRow[1] = { v: "Frenteada", s: separatorStyle }; wsData.push(sepRow);
@@ -321,9 +422,9 @@
                 reader.onload = (evt) => {
                     try {
                         const wb = XLSX.read(evt.target.result, { type: 'binary' });
-                        if (wb.SheetNames.length > 1) { setTempWorkbook(wb); setSheetList(wb.SheetNames); setSheetSelectorOpen(true); } 
+                        if (wb.SheetNames.length > 1) { setTempWorkbook(wb); setSheetList(wb.SheetNames); setSheetSelectorOpen(true); }
                         else { processSheetImport(wb, wb.SheetNames[0]); }
-                    } catch(e) { console.error(e); alert("❌ Error archivo"); }
+                    } catch (e) { console.error(e); alert("❌ Error archivo"); }
                 }; reader.readAsBinaryString(file); e.target.value = '';
             };
 
@@ -334,22 +435,22 @@
                     const newInventory = JSON.parse(JSON.stringify(inventory));
                     let countDocks = 0; let countYard = 0;
                     const resolveStatus = (raw, s1, s2, eco, allowed) => {
-                        let c = (raw || '').toString().replace(/\.$/, '').trim(); if(c) c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
-                        if(allowed.includes(c)) return c; if(s1||s2) return 'Cargada'; if(eco && allowed.includes('Cargada')) return 'Cargada'; return 'Vacía';
+                        let c = (raw || '').toString().replace(/\.$/, '').trim(); if (c) c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
+                        if (allowed.includes(c)) return c; if (s1 || s2) return 'Cargada'; if (eco && allowed.includes('Cargada')) return 'Cargada'; return 'Vacía';
                     };
                     data.forEach(r => {
-                        const u = (r['A']||'').toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
-                        if(!u) return;
-                        const s1=(r['E']||'').toString(), s2=(r['F']||'').toString(), eco=(r['C']||'').toString();
-                        const common = { size: (r['B']||'').toString(), eco, line: (r['D']||'').toString(), sealLeft: s1, sealRight: s2, observations: (r['H']||'').toString() };
-                        if(u.includes('anden')) {
-                            const n = parseInt(u.replace(/[^0-9]/g, '')); if(n>0 && n<=DOCK_COUNT) {
-                                newInventory[currentShift].docks[n-1] = { ...newInventory[currentShift].docks[n-1], ...common, status: resolveStatus(r['G'], s1, s2, eco, DOCK_STATUSES) }; countDocks++;
+                        const u = (r['A'] || '').toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        if (!u) return;
+                        const s1 = (r['E'] || '').toString(), s2 = (r['F'] || '').toString(), eco = (r['C'] || '').toString();
+                        const common = { size: (r['B'] || '').toString(), eco, line: (r['D'] || '').toString(), sealLeft: s1, sealRight: s2, observations: (r['H'] || '').toString() };
+                        if (u.includes('anden')) {
+                            const n = parseInt(u.replace(/[^0-9]/g, '')); if (n > 0 && n <= DOCK_COUNT) {
+                                newInventory[currentShift].docks[n - 1] = { ...newInventory[currentShift].docks[n - 1], ...common, status: resolveStatus(r['G'], s1, s2, eco, DOCK_STATUSES) }; countDocks++;
                             }
-                        } else if(u.includes('frenteada') || u.includes('patio')) {
-                            const n = parseInt(u.replace(/[^0-9]/g, '')); if(n>0 && n<=YARD_COUNT) {
-                                if(eco || s1 || s2 || common.size) {
-                                    newInventory[currentShift].yard[n-1] = { ...newInventory[currentShift].yard[n-1], ...common, status: resolveStatus(r['G'], s1, s2, eco, YARD_STATUSES) }; countYard++;
+                        } else if (u.includes('frenteada') || u.includes('patio')) {
+                            const n = parseInt(u.replace(/[^0-9]/g, '')); if (n > 0 && n <= YARD_COUNT) {
+                                if (eco || s1 || s2 || common.size) {
+                                    newInventory[currentShift].yard[n - 1] = { ...newInventory[currentShift].yard[n - 1], ...common, status: resolveStatus(r['G'], s1, s2, eco, YARD_STATUSES) }; countYard++;
                                 }
                             }
                         }
@@ -365,17 +466,17 @@
             const selectClass = "w-full px-5 py-4 bg-stone-100/50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 focus:bg-white dark:focus:bg-stone-950 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-700 dark:text-stone-200 font-bold ring-4 ring-transparent focus:ring-indigo-100 dark:focus:ring-indigo-900/30 outline-none appearance-none cursor-pointer transition-all pr-12";
 
             return React.createElement('div', { className: "min-h-screen pb-32 animate-fade-in" }, [
-                
-                showSaveToast && React.createElement('div', { className: `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 px-6 py-3 rounded-full shadow-xl flex items-center gap-2 ${isClosingToast ? 'animate-slide-out' : 'animate-scale-in'}` }, [ React.createElement(CheckCircle, { size: 20, className: "text-emerald-400 dark:text-emerald-600" }), React.createElement('span', { className: "font-bold text-sm" }, saveMessage) ]),
 
-                React.createElement('header', { className: "sticky top-0 sm:top-4 z-40 px-2 sm:px-4 mb-6 sm:mb-8 pt-2 sm:pt-0" }, 
+                showSaveToast && React.createElement('div', { className: `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 px-6 py-3 rounded-full shadow-xl flex items-center gap-2 ${isClosingToast ? 'animate-slide-out' : 'animate-scale-in'}` }, [React.createElement(CheckCircle, { size: 20, className: "text-emerald-400 dark:text-emerald-600" }), React.createElement('span', { className: "font-bold text-sm" }, saveMessage)]),
+
+                React.createElement('header', { className: "sticky top-0 sm:top-4 z-40 px-2 sm:px-4 mb-6 sm:mb-8 pt-2 sm:pt-0" },
                     React.createElement('div', { className: "max-w-6xl mx-auto bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl shadow-lg rounded-3xl sm:rounded-[2.5rem] border border-white/50 dark:border-stone-700/50 px-4 py-3 sm:px-6 sm:py-4 animate-scale-in delay-0 transition-colors duration-500" }, [
                         React.createElement('div', { className: "flex flex-col gap-4" }, [
                             React.createElement('div', { className: "flex items-center justify-between" }, [
                                 React.createElement('div', { className: "flex items-center gap-3" }, [
                                     React.createElement('div', { onClick: handleResetAll, className: "bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200 dark:shadow-indigo-900/50" }, React.createElement(ClipboardList, { size: 20 })),
                                     React.createElement('div', null, [
-                                        React.createElement('h1', { className: "text-lg font-bold text-stone-800 dark:text-stone-100 tracking-tight flex items-center gap-2 leading-tight" }, ["Logística Lake", !isOnline && React.createElement('span', { className: "flex items-center gap-1 text-[9px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full animate-pulse" }, [React.createElement(WifiOff, { size: 8 }), "Off"])]),
+                                        React.createElement('h1', { className: "text-lg font-bold text-stone-800 dark:text-stone-100 tracking-tight flex items-center gap-2 leading-tight" }, ["Logística Lakeness", !isOnline && React.createElement('span', { className: "flex items-center gap-1 text-[9px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full animate-pulse" }, [React.createElement(WifiOff, { size: 8 }), "Off"])]),
                                         React.createElement('p', { className: "text-[10px] font-medium text-stone-400 dark:text-stone-500" }, isOnline ? 'Modo Nexxus' : 'Modo Local')
                                     ])
                                 ]),
@@ -398,18 +499,18 @@
                     ])
                 ),
 
-                React.createElement('main', { className: "max-w-6xl mx-auto px-4 pb-24" }, 
+                React.createElement('main', { className: "max-w-6xl mx-auto px-4 pb-24" },
                     activeTab === 'docks' ? React.createElement('div', { key: 'docks-view', className: "space-y-8 animate-fade-in" }, [
                         React.createElement('section', { className: "animate-slide-up" }, [
-                            React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [ React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 font-bold text-xs shadow-sm" }, "G"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Zona Galleta") ]),
+                            React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 font-bold text-xs shadow-sm" }, "G"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Zona Galleta")]),
                             React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" }, currentDocks.slice(0, 10).map((slot, idx) => React.createElement(SlotCard, { key: slot.id, index: idx, type: "docks", data: slot, onClick: handleSlotClick })))
                         ]),
                         React.createElement('section', { className: "animate-slide-up delay-100" }, [
-                            React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [ React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 font-bold text-xs shadow-sm" }, "S"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Zona Salado") ]),
+                            React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 font-bold text-xs shadow-sm" }, "S"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Zona Salado")]),
                             React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" }, currentDocks.slice(10, 18).map((slot, idx) => React.createElement(SlotCard, { key: slot.id, index: idx + 10, type: "docks", data: slot, onClick: handleSlotClick })))
                         ])
                     ]) : React.createElement('div', { key: 'yard-view', className: "animate-fade-in" }, [
-                        React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [ React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-bold text-xs shadow-sm" }, "P"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Patio de Maniobras") ]),
+                        React.createElement('div', { className: "flex items-center gap-3 mb-4 px-2" }, [React.createElement('span', { className: "flex items-center justify-center w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-bold text-xs shadow-sm" }, "P"), React.createElement('h2', { className: "text-lg font-bold text-stone-700 dark:text-stone-200 tracking-tight" }, "Patio de Maniobras")]),
                         React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" }, currentYard.map((slot, idx) => React.createElement(SlotCard, { key: slot.id, index: idx, type: "yard", data: slot, onClick: handleSlotClick })))
                     ])
                 ),
@@ -418,8 +519,8 @@
                     React.createElement('div', { className: "absolute inset-0 bg-stone-900/50 backdrop-blur-md transition-opacity animate-fade-in", onClick: () => setSheetSelectorOpen(false) }),
                     React.createElement('div', { className: "relative bg-white dark:bg-stone-900 rounded-[2rem] shadow-2xl p-6 w-full max-w-sm overflow-hidden animate-scale-in border border-white dark:border-stone-700" }, [
                         React.createElement('h3', { className: "text-xl font-bold text-stone-800 dark:text-stone-100 text-center mb-4" }, "Selecciona una Hoja"),
-                        React.createElement('div', { className: "space-y-2 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar" }, 
-                            sheetList.map(sheet => 
+                        React.createElement('div', { className: "space-y-2 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar" },
+                            sheetList.map(sheet =>
                                 React.createElement('button', {
                                     key: sheet,
                                     onClick: () => handleSheetSelection(sheet),
@@ -445,7 +546,7 @@
                             React.createElement('h3', { className: "text-xl font-bold text-stone-800 dark:text-stone-100" }, "Limpieza"),
                             React.createElement('p', { className: "text-xs text-stone-400 mt-1" }, "¿Qué deseas borrar hoy?")
                         ]),
-                        
+
                         React.createElement('button', { onClick: () => handleClean('all'), className: "w-full p-3 mb-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center gap-3 transition-all group active:scale-95" }, [
                             React.createElement('div', { className: "p-1.5 bg-white dark:bg-stone-800 rounded-lg shadow-sm" }, React.createElement(Trash2, { size: 18 })),
                             React.createElement('div', { className: "text-left" }, [
@@ -457,7 +558,7 @@
                         React.createElement('div', { className: "border-t border-stone-100 dark:border-stone-800 my-4" }),
                         React.createElement('p', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-3 text-center" }, "Por Turno"),
 
-                        React.createElement('div', { className: "space-y-2" }, SHIFTS.map(shift => 
+                        React.createElement('div', { className: "space-y-2" }, SHIFTS.map(shift =>
                             React.createElement('div', { key: shift, className: "p-3 rounded-xl bg-stone-50 dark:bg-stone-800/50" }, [
                                 React.createElement('div', { className: "flex justify-between items-center" }, [
                                     React.createElement('span', { className: "font-bold text-xs text-stone-700 dark:text-stone-200" }, `Turno ${shift}`),
@@ -490,21 +591,21 @@
                         // Scrollable Body
                         React.createElement('div', { className: "px-5 py-2 space-y-4 overflow-y-auto overscroll-contain flex-1" }, [
                             React.createElement('div', { className: "grid grid-cols-2 gap-3" }, [
-                                React.createElement('div', { className: "space-y-1 group" }, [ React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "Económico"), React.createElement('input', { type: "text", name: "eco", value: formData.eco, onChange: handleInputChange, placeholder: "---", className: inputClass }) ]),
-                                React.createElement('div', { className: "space-y-1 group" }, [ React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "Línea"), React.createElement('input', { type: "text", name: "line", value: formData.line, onChange: handleInputChange, placeholder: "---", className: inputClass }) ])
+                                React.createElement('div', { className: "space-y-1 group" }, [React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "Económico"), React.createElement('input', { type: "text", name: "eco", value: formData.eco, onChange: handleInputChange, placeholder: "---", className: inputClass })]),
+                                React.createElement('div', { className: "space-y-1 group" }, [React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "Línea"), React.createElement('input', { type: "text", name: "line", value: formData.line, onChange: handleInputChange, placeholder: "---", className: inputClass })])
                             ]),
                             React.createElement('div', { className: "grid grid-cols-2 gap-3" }, [
                                 React.createElement('div', { className: "space-y-1" }, [
                                     React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "FT"),
                                     React.createElement('div', { className: "relative group" }, [
-                                        React.createElement('select', { name: "size", value: formData.size, onChange: handleInputChange, className: selectClass }, [ React.createElement('option', { value: "" }, "---"), SIZES.map(s => React.createElement('option', { key: s, value: s }, s)) ]),
+                                        React.createElement('select', { name: "size", value: formData.size, onChange: handleInputChange, className: selectClass }, [React.createElement('option', { value: "" }, "---"), SIZES.map(s => React.createElement('option', { key: s, value: s }, s))]),
                                         React.createElement('div', { className: "absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400" }, React.createElement(ChevronDown, { size: 16 }))
                                     ])
                                 ]),
                                 React.createElement('div', { className: "space-y-1" }, [
                                     React.createElement('label', { className: "text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-1" }, "Status"),
                                     React.createElement('div', { className: "relative group" }, [
-                                        React.createElement('select', { name: "status", value: formData.status, onChange: handleInputChange, className: selectClass }, [ React.createElement('option', { value: "" }, "Seleccionar"), (editingSlot.type === 'docks' ? DOCK_STATUSES : YARD_STATUSES).map(s => React.createElement('option', { key: s, value: s }, s)) ]),
+                                        React.createElement('select', { name: "status", value: formData.status, onChange: handleInputChange, className: selectClass }, [React.createElement('option', { value: "" }, "Seleccionar"), (editingSlot.type === 'docks' ? DOCK_STATUSES : YARD_STATUSES).map(s => React.createElement('option', { key: s, value: s }, s))]),
                                         React.createElement('div', { className: "absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-current opacity-50" }, React.createElement(ChevronDown, { size: 16 }))
                                     ])
                                 ])
@@ -512,8 +613,8 @@
                             (formData.status === 'Frenteada' || formData.status === 'Cargada') && React.createElement('div', { className: "bg-[#FFF7ED] dark:bg-amber-900/10 p-4 rounded-[1.5rem] border border-orange-100 dark:border-amber-900/30 animate-slide-up" }, [
                                 React.createElement('div', { className: "flex items-center gap-2 mb-3 text-orange-800 dark:text-amber-400 font-bold text-xs" }, [React.createElement(ClipboardList, { size: 16 }), " Sellos de Seguridad"]),
                                 React.createElement('div', { className: "grid grid-cols-2 gap-3" }, [
-                                    React.createElement('div', { className: "space-y-1" }, [ React.createElement('label', { className: "text-[9px] text-orange-600/70 dark:text-amber-400/70 font-bold uppercase ml-1" }, "Sello #1"), React.createElement('input', { type: "text", name: "sealLeft", value: formData.sealLeft, onChange: handleInputChange, className: "w-full p-2.5 bg-white dark:bg-stone-800 border border-orange-200 dark:border-amber-700/50 rounded-xl text-sm dark:text-stone-200 focus:outline-none focus:border-orange-400 ring-2 ring-transparent focus:ring-orange-100 dark:focus:ring-amber-900/20 transition-all" }) ]),
-                                    React.createElement('div', { className: "space-y-1" }, [ React.createElement('label', { className: "text-[9px] text-orange-600/70 dark:text-amber-400/70 font-bold uppercase ml-1" }, "Sello #2 *"), React.createElement('input', { type: "text", name: "sealRight", value: formData.sealRight, onChange: handleInputChange, className: "w-full p-2.5 bg-white dark:bg-stone-800 border-2 border-orange-300 dark:border-amber-600/50 rounded-xl text-sm dark:text-stone-200 focus:outline-none focus:border-orange-500 ring-2 ring-transparent focus:ring-orange-100 dark:focus:ring-amber-900/20 font-medium transition-all", placeholder: "Requerido" }) ])
+                                    React.createElement('div', { className: "space-y-1" }, [React.createElement('label', { className: "text-[9px] text-orange-600/70 dark:text-amber-400/70 font-bold uppercase ml-1" }, "Sello #1"), React.createElement('input', { type: "text", name: "sealLeft", value: formData.sealLeft, onChange: handleInputChange, className: "w-full p-2.5 bg-white dark:bg-stone-800 border border-orange-200 dark:border-amber-700/50 rounded-xl text-sm dark:text-stone-200 focus:outline-none focus:border-orange-400 ring-2 ring-transparent focus:ring-orange-100 dark:focus:ring-amber-900/20 transition-all" })]),
+                                    React.createElement('div', { className: "space-y-1" }, [React.createElement('label', { className: "text-[9px] text-orange-600/70 dark:text-amber-400/70 font-bold uppercase ml-1" }, "Sello #2 *"), React.createElement('input', { type: "text", name: "sealRight", value: formData.sealRight, onChange: handleInputChange, className: "w-full p-2.5 bg-white dark:bg-stone-800 border-2 border-orange-300 dark:border-amber-600/50 rounded-xl text-sm dark:text-stone-200 focus:outline-none focus:border-orange-500 ring-2 ring-transparent focus:ring-orange-100 dark:focus:ring-amber-900/20 font-medium transition-all", placeholder: "Requerido" })])
                                 ])
                             ]),
                             React.createElement('div', { className: "space-y-1 group" }, [
@@ -524,7 +625,7 @@
                         // Footer (Buttons) - Siempre visible al fondo
                         React.createElement('div', { className: "px-6 pb-8 pt-2 flex gap-3 shrink-0 bg-white/95 dark:bg-stone-900/95" }, [
                             React.createElement('button', { onClick: handleClearSlot, className: "flex-1 py-3.5 px-4 rounded-2xl bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 font-bold hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-900/20 dark:hover:text-rose-300 transition-all duration-300 active:scale-95 text-sm" }, "Limpiar"),
-                            React.createElement('button', { onClick: handleSave, className: "flex-[2] py-3.5 px-4 rounded-2xl bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 font-bold shadow-xl shadow-stone-300 dark:shadow-stone-900/50 hover:bg-stone-700 dark:hover:bg-white hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 text-sm" }, [ React.createElement(Save, { size: 18 }), " Guardar" ])
+                            React.createElement('button', { onClick: handleSave, className: "flex-[2] py-3.5 px-4 rounded-2xl bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 font-bold shadow-xl shadow-stone-300 dark:shadow-stone-900/50 hover:bg-stone-700 dark:hover:bg-white hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 text-sm" }, [React.createElement(Save, { size: 18 }), " Guardar"])
                         ])
                     ])
                 ]),
@@ -548,4 +649,5 @@
         root.render(React.createElement(App));
     </script>
 </body>
+
 </html>
