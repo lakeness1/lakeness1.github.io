@@ -1,105 +1,15 @@
-// ===================================
-// LOGÍSTICA LAKENESS - APP
-// Estilo: Cozy y Aesthetic
-// ===================================
-
 import React, { useState, useEffect, useRef } from 'https://esm.sh/react@18.2.0';
-import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
 import {
-    Truck, ClipboardList, Save, X, Download, Upload,
-    AlertTriangle, CheckCircle, MoreHorizontal, Box,
-    Wifi, WifiOff, ChevronDown, Sparkles, FileSpreadsheet,
+    ClipboardList, Save, X, Upload,
+    CheckCircle, WifiOff, Sparkles, FileSpreadsheet,
     Moon, Sun, Settings, Wrench, FileText, ArrowRight,
-    Eraser, Trash2, LayoutGrid, Grid, Menu
+    Eraser, Trash2, ChevronDown
 } from 'https://esm.sh/lucide-react@0.263.1';
 
-// --- CONSTANTES ---
-const DOCK_COUNT = 18;
-const YARD_COUNT = 20;
-const SHIFTS = [1, 2, 3];
-const STORAGE_KEY = 'lake_logistica_inventory_v22_responsive_fix';
-const THEME_KEY = 'lake_theme_preference';
+import { DOCK_COUNT, SHIFTS, STORAGE_KEY, THEME_KEY, SIZES, DOCK_STATUSES, YARD_STATUSES, emptySlotData } from './core/constants.js';
+import { exportToExcel, processSheetImport, generateInitialData } from './core/utils.js';
+import SlotCard from './components/SlotCard.js';
 
-const SIZES = ['53', '48', '40', '3.5'];
-const DOCK_STATUSES = ['Vacía', 'Enrampada', 'Frenteada', 'Cargada'];
-const YARD_STATUSES = ['Vacía', 'Cargada'];
-
-const emptySlotData = {
-    id: '', number: 0, type: 'docks', size: '', eco: '', line: '',
-    status: 'Vacía', sealLeft: '', sealRight: '', observations: '', updatedAt: null,
-};
-
-const generateInitialData = () => ({
-    1: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D1-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y1-${i + 1}`, number: i + 1, type: 'yard' })) },
-    2: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D2-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y2-${i + 1}`, number: i + 1, type: 'yard' })) },
-    3: { docks: Array(DOCK_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `D3-${i + 1}`, number: i + 1, type: 'docks' })), yard: Array(YARD_COUNT).fill(null).map((_, i) => ({ ...emptySlotData, id: `Y3-${i + 1}`, number: i + 1, type: 'yard' })) },
-});
-
-const DEFAULT_INVENTORY = generateInitialData();
-
-// --- COMPONENTE TARJETA ---
-const SlotCard = ({ data, onClick, index, type }) => {
-    const statusNorm = (data.status || '').toLowerCase().replace('.', '').trim();
-    const isOccupied = statusNorm !== 'vacía' && statusNorm !== '';
-
-    let cardStyle = "bg-white dark:bg-stone-800 border-2 border-transparent dark:border-stone-700/50 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-500/30 text-stone-400 dark:text-stone-500 hover:shadow-lg dark:hover:shadow-black/40";
-    let iconColor = "text-stone-300 dark:text-stone-600";
-    let statusBadge = "bg-stone-100 dark:bg-stone-700 text-stone-500 dark:text-stone-400 border border-stone-200 dark:border-stone-600";
-
-    if (statusNorm === 'cargada') {
-        cardStyle = "bg-white dark:bg-rose-900/10 border-2 border-rose-100 dark:border-rose-900/30 text-rose-700 dark:text-rose-400 hover:shadow-lg hover:shadow-rose-200/50 dark:hover:shadow-rose-900/20";
-        iconColor = "text-rose-400 dark:text-rose-500";
-        statusBadge = "bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-300 border border-rose-100 dark:border-rose-800/50";
-    }
-    if (statusNorm === 'frenteada') {
-        cardStyle = "bg-white dark:bg-amber-900/10 border-2 border-amber-100 dark:border-amber-900/30 text-amber-700 dark:text-amber-400 hover:shadow-lg hover:shadow-amber-200/50 dark:hover:shadow-amber-900/20";
-        iconColor = "text-amber-400 dark:text-amber-500";
-        statusBadge = "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-300 border border-amber-100 dark:border-amber-800/50";
-    }
-    if (statusNorm === 'enrampada') {
-        cardStyle = "bg-white dark:bg-sky-900/10 border-2 border-sky-100 dark:border-sky-900/30 text-sky-700 dark:text-sky-400 hover:shadow-lg hover:shadow-sky-200/50 dark:hover:shadow-sky-900/20";
-        iconColor = "text-sky-400 dark:text-sky-500";
-        statusBadge = "bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-300 border border-sky-100 dark:border-sky-800/50";
-    }
-    if (statusNorm === 'vacía' && (data.eco || data.line)) {
-        cardStyle = "bg-white dark:bg-emerald-900/10 border-2 border-emerald-100 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:shadow-lg hover:shadow-emerald-200/50 dark:hover:shadow-emerald-900/20";
-        iconColor = "text-emerald-400 dark:text-emerald-500";
-        statusBadge = "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800/50";
-    }
-
-    const delayStyle = { animationDelay: `${(index % 10) * 50}ms` };
-    let ecoText = 'Disponible';
-    if (data.eco) ecoText = `ECO ${data.eco}`;
-    else if (isOccupied) ecoText = 'Sin económico';
-
-    return React.createElement('div', {
-        style: delayStyle,
-        onClick: () => onClick(index, type),
-        className: `relative p-4 rounded-[1.5rem] transition-all duration-500 ease-out cursor-pointer active:scale-95 flex flex-col justify-between h-36 sm:h-44 group animate-slide-up ${cardStyle}`
-    }, [
-        React.createElement('div', { key: 'header', className: "flex justify-between items-start" }, [
-            React.createElement('div', { key: 'info', className: "flex flex-col" }, [
-                React.createElement('span', { key: 'num', className: "font-black text-2xl sm:text-3xl tracking-tighter opacity-90 transition-transform group-hover:scale-105 origin-left text-stone-700 dark:text-stone-200" }, type === 'docks' ? `${data.number}` : `P${data.number}`),
-                React.createElement('span', { key: 'label', className: "text-[9px] sm:text-[10px] uppercase tracking-widest font-bold opacity-50 mt-0.5" }, type === 'docks' ? 'Andén' : 'Patio')
-            ]),
-            isOccupied
-                ? React.createElement('div', { key: 'icon', className: `p-2 rounded-xl bg-stone-50 dark:bg-stone-900/50 shadow-inner ${iconColor} transition-transform group-hover:rotate-3 group-hover:scale-110 duration-300` }, React.createElement(Truck, { size: 18, strokeWidth: 1.5 }))
-                : React.createElement('div', { key: 'icon', className: `p-2 rounded-xl bg-stone-50 dark:bg-stone-900/50 ${iconColor} transition-transform group-hover:scale-110 duration-300` }, React.createElement(Box, { size: 18, strokeWidth: 1.5 }))
-        ]),
-        React.createElement('div', { key: 'details', className: "space-y-1" }, [
-            React.createElement('div', { key: 'eco', className: "text-sm sm:text-base font-bold truncate opacity-90 dark:opacity-100" }, ecoText),
-            data.line && React.createElement('div', { key: 'line', className: "text-[10px] sm:text-xs font-bold uppercase truncate opacity-60 dark:opacity-70 flex items-center gap-1" }, [
-                React.createElement('span', { className: "w-1 h-1 rounded-full bg-current opacity-40" }), data.line
-            ]),
-            React.createElement('div', { key: 'status', className: `text-[9px] sm:text-[10px] font-extrabold px-2.5 py-1 rounded-full w-fit tracking-wide transition-all duration-300 ${statusBadge} mt-1.5` }, (data.status || 'Sin Asignar').toUpperCase())
-        ]),
-        (statusNorm === 'cargada' || statusNorm === 'frenteada') && React.createElement('div', { key: 'alert', className: "absolute top-3 right-3 transition-all duration-300 group-hover:scale-125" },
-            data.sealRight ? React.createElement(CheckCircle, { size: 16, className: "text-emerald-500 fill-emerald-50" }) : React.createElement(AlertTriangle, { size: 16, className: "text-rose-500 fill-rose-50" })
-        )
-    ]);
-};
-
-// --- APP PRINCIPAL ---
 function App() {
     const [inventory, setInventory] = useState(() => {
         try {
@@ -108,7 +18,7 @@ function App() {
                 if (savedData) return JSON.parse(savedData);
             }
         } catch (error) { console.error(error); }
-        return DEFAULT_INVENTORY;
+        return generateInitialData();
     });
 
     const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
@@ -166,7 +76,6 @@ function App() {
     };
 
     const handleClean = (scope, shift = null, type = null) => {
-        // Simplificado para evitar confirmación nativa que falla en algunos móviles
         const newInventory = JSON.parse(JSON.stringify(inventory));
         const freshData = generateInitialData();
 
@@ -202,7 +111,6 @@ function App() {
         setInventory(newInventory); closeModalAnimated(); triggerSaveFeedback();
     };
 
-    // FIX: Limpiar un solo slot ahora funciona correctamente
     const handleClearSlot = () => {
         const newInventory = JSON.parse(JSON.stringify(inventory));
         const originalId = newInventory[currentShift][editingSlot.type][editingSlot.index].id;
@@ -212,79 +120,19 @@ function App() {
         triggerSaveFeedback("Espacio Liberado");
     };
 
-    // Export/Import (Mismo código estable de V18)
-    const exportToExcel = () => {
-        if (!window.XLSX) return alert("Cargando...");
-        const wb = XLSX.utils.book_new();
-        const borderStyle = { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } };
-        const titleStyle = { font: { bold: true, sz: 14, name: "Calibri" }, alignment: { horizontal: "left" } };
-        const headerStyle = { font: { bold: true, sz: 11, name: "Calibri" }, fill: { fgColor: { rgb: "E0E0E0" } }, border: borderStyle, alignment: { horizontal: "center", vertical: "center" } };
-        const dataStyle = { font: { sz: 11, name: "Calibri" }, border: borderStyle, alignment: { horizontal: "center", vertical: "center" } };
-        const separatorStyle = { font: { bold: true, sz: 11, name: "Calibri" } };
-        const currentData = inventory[currentShift];
-        const wsData = [[{ v: "Inventario Nexxus", s: titleStyle }]];
-        wsData.push(["Ubicación", "FT", "Eco.", "Línea", "Sello #1", "Sello #2", "Status", "Observaciones"].map(h => ({ v: h, s: headerStyle })));
-        currentData.docks.forEach(slot => {
-            const isFrenteada = (slot.status || '').toLowerCase() === 'frenteada'; const show = !isFrenteada;
-            wsData.push([{ v: `Andén ${slot.number}`, s: dataStyle }, { v: show ? slot.size : '', s: dataStyle }, { v: show ? slot.eco : '', s: dataStyle }, { v: show ? slot.line : '', s: dataStyle }, { v: show ? slot.sealLeft : '', s: dataStyle }, { v: show ? slot.sealRight : '', s: dataStyle }, { v: show && slot.status !== 'Vacía' ? (slot.status + '.') : '', s: dataStyle }, { v: show ? slot.observations : '', s: dataStyle }]);
-        });
-        const sepRow = new Array(8).fill({ v: "", s: {} }); sepRow[1] = { v: "Frenteada", s: separatorStyle }; wsData.push(sepRow);
-        currentData.docks.forEach(slot => {
-            const isFrenteada = (slot.status || '').toLowerCase() === 'frenteada';
-            wsData.push([{ v: `Frenteada ${slot.number}`, s: dataStyle }, { v: isFrenteada ? slot.size : '', s: dataStyle }, { v: isFrenteada ? slot.eco : '', s: dataStyle }, { v: isFrenteada ? slot.line : '', s: dataStyle }, { v: isFrenteada ? slot.sealLeft : '', s: dataStyle }, { v: isFrenteada ? slot.sealRight : '', s: dataStyle }, { v: isFrenteada ? (slot.status + '.') : '', s: dataStyle }, { v: isFrenteada ? slot.observations : '', s: dataStyle }]);
-        });
-        const sepRow2 = new Array(8).fill({ v: "", s: {} }); sepRow2[1] = { v: "Patio", s: separatorStyle }; wsData.push(sepRow2);
-        currentData.yard.forEach(slot => {
-            wsData.push([{ v: `Patio ${slot.number}`, s: dataStyle }, { v: slot.size, s: dataStyle }, { v: slot.eco, s: dataStyle }, { v: slot.line, s: dataStyle }, { v: slot.sealLeft, s: dataStyle }, { v: slot.sealRight, s: dataStyle }, { v: slot.status !== 'Vacía' ? (slot.status + '.') : '', s: dataStyle }, { v: slot.observations, s: dataStyle }]);
-        });
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        ws['!cols'] = [{ wch: 15 }, { wch: 6 }, { wch: 12 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 30 }];
-        XLSX.utils.book_append_sheet(wb, ws, "Inventario");
-        XLSX.writeFile(wb, `Inventario Nexxus - ${new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })}.xlsx`);
-    };
-
     const handleImportClick = () => fileInputRef.current.click();
     const handleFileChange = (e) => {
         const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
         reader.onload = (evt) => {
             try {
-                const wb = XLSX.read(evt.target.result, { type: 'binary' });
+                const wb = window.XLSX.read(evt.target.result, { type: 'binary' });
                 if (wb.SheetNames.length > 1) { setTempWorkbook(wb); setSheetList(wb.SheetNames); setSheetSelectorOpen(true); }
-                else { processSheetImport(wb, wb.SheetNames[0]); }
+                else { processSheetImport(wb, wb.SheetNames[0], inventory, currentShift, setInventory, triggerSaveFeedback); }
             } catch (e) { console.error(e); alert("❌ Error archivo"); }
         }; reader.readAsBinaryString(file); e.target.value = '';
     };
 
-    const handleSheetSelection = (sheetName) => { if (tempWorkbook) { processSheetImport(tempWorkbook, sheetName); setSheetSelectorOpen(false); setTempWorkbook(null); } };
-    const processSheetImport = (wb, sheetName) => {
-        try {
-            const data = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: "A", defval: "" });
-            const newInventory = JSON.parse(JSON.stringify(inventory));
-            let countDocks = 0; let countYard = 0;
-            const resolveStatus = (raw, s1, s2, eco, allowed) => {
-                let c = (raw || '').toString().replace(/\.$/, '').trim(); if (c) c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
-                if (allowed.includes(c)) return c; if (s1 || s2) return 'Cargada'; if (eco && allowed.includes('Cargada')) return 'Cargada'; return 'Vacía';
-            };
-            data.forEach(r => {
-                const u = (r['A'] || '').toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                if (!u) return;
-                const s1 = (r['E'] || '').toString(), s2 = (r['F'] || '').toString(), eco = (r['C'] || '').toString();
-                const common = { size: (r['B'] || '').toString(), eco, line: (r['D'] || '').toString(), sealLeft: s1, sealRight: s2, observations: (r['H'] || '').toString() };
-                if (u.includes('anden')) {
-                    const n = parseInt(u.replace(/[^0-9]/g, '')); if (n > 0 && n <= DOCK_COUNT) {
-                        newInventory[currentShift].docks[n - 1] = { ...newInventory[currentShift].docks[n - 1], ...common, status: resolveStatus(r['G'], s1, s2, eco, DOCK_STATUSES) }; countDocks++;
-                    }
-                } else if (u.includes('frenteada') || u.includes('patio')) {
-                    const n = parseInt(u.replace(/[^0-9]/g, '')); if (n > 0 && n <= YARD_COUNT) {
-                        if (eco || s1 || s2 || common.size) {
-                            newInventory[currentShift].yard[n - 1] = { ...newInventory[currentShift].yard[n - 1], ...common, status: resolveStatus(r['G'], s1, s2, eco, YARD_STATUSES) }; countYard++;
-                        }
-                    }
-                }
-            });
-            setInventory(newInventory); alert(`✅ Hoja "${sheetName}" importada.\n\n📦 Andenes: ${countDocks}\n🚚 Patio: ${countYard}`); triggerSaveFeedback();
-        } catch (e) { console.error(e); alert("Error procesando la hoja."); }
-    };
+    const handleSheetSelection = (sheetName) => { if (tempWorkbook) { processSheetImport(tempWorkbook, sheetName, inventory, currentShift, setInventory, triggerSaveFeedback); setSheetSelectorOpen(false); setTempWorkbook(null); } };
 
     const currentDocks = inventory[currentShift].docks;
     const currentYard = inventory[currentShift].yard;
@@ -294,34 +142,34 @@ function App() {
 
     return React.createElement('div', { className: "min-h-screen pb-32 animate-fade-in" }, [
 
-        showSaveToast && React.createElement('div', { className: `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 px-6 py-3 rounded-full shadow-xl flex items-center gap-2 ${isClosingToast ? 'animate-slide-out' : 'animate-scale-in'}` }, [React.createElement(CheckCircle, { size: 20, className: "text-emerald-400 dark:text-emerald-600" }), React.createElement('span', { className: "font-bold text-sm" }, saveMessage)]),
+        showSaveToast && React.createElement('div', { className: `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 px-6 py-3 rounded-full shadow-xl flex items-center gap-2 ${isClosingToast ? 'animate-slide-out' : 'animate-bounce-in'}` }, [React.createElement(CheckCircle, { size: 20, className: "text-emerald-400 dark:text-emerald-600" }), React.createElement('span', { className: "font-bold text-sm" }, saveMessage)]),
 
         React.createElement('header', { className: "sticky top-0 sm:top-4 z-40 px-2 sm:px-4 mb-6 sm:mb-8 pt-2 sm:pt-0" },
-            React.createElement('div', { className: "max-w-6xl mx-auto bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl shadow-lg rounded-3xl sm:rounded-[2.5rem] border border-white/50 dark:border-stone-700/50 px-4 py-3 sm:px-6 sm:py-4 animate-scale-in delay-0 transition-colors duration-500" }, [
+            React.createElement('div', { className: "max-w-6xl mx-auto bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl shadow-lg rounded-3xl sm:rounded-[2.5rem] border border-white/50 dark:border-stone-700/50 px-4 py-3 sm:px-6 sm:py-4 animate-slide-in-right delay-0 transition-colors duration-500" }, [
                 React.createElement('div', { className: "flex flex-col gap-4" }, [
                     React.createElement('div', { className: "flex items-center justify-between" }, [
                         React.createElement('div', { className: "flex items-center gap-3" }, [
-                            React.createElement('div', { onClick: handleResetAll, className: "bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200 dark:shadow-indigo-900/50" }, React.createElement(ClipboardList, { size: 20 })),
+                            React.createElement('div', { onClick: handleResetAll, className: "bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200 dark:shadow-indigo-900/50 hover-float transition-all" }, React.createElement(ClipboardList, { size: 20 })),
                             React.createElement('div', null, [
                                 React.createElement('h1', { className: "text-lg font-bold text-stone-800 dark:text-stone-100 tracking-tight flex items-center gap-2 leading-tight" }, ["Logística Lakeness", !isOnline && React.createElement('span', { className: "flex items-center gap-1 text-[9px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full animate-pulse" }, [React.createElement(WifiOff, { size: 8 }), "Off"])]),
                                 React.createElement('p', { className: "text-[10px] font-medium text-stone-400 dark:text-stone-500" }, isOnline ? 'Modo Nexxus' : 'Modo Local')
                             ])
                         ]),
                         React.createElement('div', { className: "flex gap-1.5 items-center" }, [
-                            React.createElement('button', { onClick: () => setCleanerOpen(true), className: "p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all active:scale-95", title: "Limpiar Datos" }, React.createElement(Eraser, { size: 18 })),
-                            React.createElement('button', { onClick: toggleTheme, className: "p-2.5 rounded-xl bg-amber-100 dark:bg-indigo-900/30 text-amber-600 dark:text-indigo-300 transition-all active:scale-95" }, isDarkMode ? React.createElement(Moon, { size: 18 }) : React.createElement(Sun, { size: 18 })),
-                            React.createElement('button', { onClick: handleImportClick, className: "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 transition-all active:scale-95" }, [React.createElement(Upload, { size: 18 }), React.createElement('input', { type: "file", accept: ".xlsx,.csv", ref: fileInputRef, onChange: handleFileChange, className: "hidden" })]),
-                            React.createElement('button', { onClick: exportToExcel, className: "p-2.5 rounded-xl bg-green-600 text-white shadow-md shadow-green-200 dark:shadow-green-900/40 transition-all active:scale-95" }, React.createElement(FileSpreadsheet, { size: 18 })),
-                            React.createElement('button', { onClick: () => setSettingsOpen(true), className: "p-2.5 rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 transition-all active:scale-95" }, React.createElement(Settings, { size: 18 }))
+                            React.createElement('button', { onClick: () => setCleanerOpen(true), className: "p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all active:scale-95 hover-float", title: "Limpiar Datos" }, React.createElement(Eraser, { size: 18 })),
+                            React.createElement('button', { onClick: toggleTheme, className: "p-2.5 rounded-xl bg-amber-100 dark:bg-indigo-900/30 text-amber-600 dark:text-indigo-300 transition-all active:scale-95 hover-float" }, isDarkMode ? React.createElement(Moon, { size: 18 }) : React.createElement(Sun, { size: 18 })),
+                            React.createElement('button', { onClick: handleImportClick, className: "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float" }, [React.createElement(Upload, { size: 18 }), React.createElement('input', { type: "file", accept: ".xlsx,.csv", ref: fileInputRef, onChange: handleFileChange, className: "hidden" })]),
+                            React.createElement('button', { onClick: () => exportToExcel(inventory, currentShift), className: "p-2.5 rounded-xl bg-green-600 text-white shadow-md shadow-green-200 dark:shadow-green-900/40 transition-all active:scale-95 hover-float" }, React.createElement(FileSpreadsheet, { size: 18 })),
+                            React.createElement('button', { onClick: () => setSettingsOpen(true), className: "p-2.5 rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float" }, React.createElement(Settings, { size: 18 }))
                         ])
                     ]),
                     React.createElement('div', { className: "flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" },
-                        SHIFTS.map(shift => React.createElement('button', { key: shift, onClick: () => setCurrentShift(shift), className: `px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 ${currentShift === shift ? 'bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 shadow-md' : 'bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400'}` }, `Turno ${shift}`))
+                        SHIFTS.map((shift, idx) => React.createElement('button', { key: shift, onClick: () => setCurrentShift(shift), style: { animationDelay: `${idx * 100}ms` }, className: `px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300 animate-slide-in-right ${currentShift === shift ? 'bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 shadow-md scale-105' : 'bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'}` }, `Turno ${shift}`))
                     ),
                 ]),
-                React.createElement('div', { className: "grid grid-cols-2 gap-2 mt-4 bg-stone-100 dark:bg-stone-800/50 p-1 rounded-2xl" }, [
-                    React.createElement('button', { onClick: () => setActiveTab('docks'), className: `py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'docks' ? 'bg-white dark:bg-stone-700 text-stone-800 dark:text-white shadow-sm' : 'text-stone-400 hover:text-stone-600'}` }, "Andenes (18)"),
-                    React.createElement('button', { onClick: () => setActiveTab('yard'), className: `py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'yard' ? 'bg-white dark:bg-stone-700 text-stone-800 dark:text-white shadow-sm' : 'text-stone-400 hover:text-stone-600'}` }, "Patio de Maniobras (20)")
+                React.createElement('div', { className: "grid grid-cols-2 gap-2 mt-4 bg-stone-100 dark:bg-stone-800/50 p-1 rounded-2xl animate-scale-in delay-200" }, [
+                    React.createElement('button', { onClick: () => setActiveTab('docks'), className: `py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'docks' ? 'bg-white dark:bg-stone-700 text-stone-800 dark:text-white shadow-sm scale-100' : 'text-stone-400 hover:text-stone-600 scale-95'}` }, "Andenes (18)"),
+                    React.createElement('button', { onClick: () => setActiveTab('yard'), className: `py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${activeTab === 'yard' ? 'bg-white dark:bg-stone-700 text-stone-800 dark:text-white shadow-sm scale-100' : 'text-stone-400 hover:text-stone-600 scale-95'}` }, "Patio de Maniobras (20)")
                 ])
             ])
         ),
@@ -472,5 +320,4 @@ function App() {
     ]);
 }
 
-const root = createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
+export default App;
