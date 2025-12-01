@@ -3,8 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Logística Lakeness - Inventario Nexxus</title>
+
+    <!-- Preconnect para optimizar carga de CDNs -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://esm.sh">
+
+    <!-- Estilos externos optimizados para móvil -->
+    <link rel="stylesheet" href="./css/styles.css">
 
     <!-- 1. Cargar Tailwind CSS y Configuración -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,8 +49,8 @@
         } catch (e) { }
     </script>
 
-    <!-- 2. Cargar Librería XLSX -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <!-- 2. Cargar Librería XLSX (defer para mejor performance) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
     <style>
         body {
