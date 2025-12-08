@@ -100,29 +100,29 @@ function renderApp(props) {
                             ])
                         ]),
 
-                        // Botones de acción
-                        React.createElement('div', { key: 'btns', className: "flex gap-1.5 items-center" }, [
+                        // Botones de acción (más compactos en móvil)
+                        React.createElement('div', { key: 'btns', className: "flex gap-1 sm:gap-1.5 items-center" }, [
                             // Botón limpiar
                             React.createElement('button', {
                                 key: 'clean',
                                 onClick: () => setCleanerOpen(true),
-                                className: "p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all active:scale-95 hover-float"
-                            }, React.createElement(LucideIcon, { name: 'eraser', size: 18 })),
+                                className: "p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all active:scale-95 hover-float"
+                            }, React.createElement(LucideIcon, { name: 'eraser', size: 16 })),
 
                             // Botón tema
                             React.createElement('button', {
                                 key: 'theme',
                                 onClick: toggleTheme,
-                                className: "p-2.5 rounded-xl bg-amber-100 dark:bg-indigo-900/30 text-amber-600 dark:text-indigo-300 transition-all active:scale-95 hover-float"
-                            }, React.createElement(LucideIcon, { name: isDarkMode ? 'moon' : 'sun', size: 18 })),
+                                className: "p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-amber-100 dark:bg-indigo-900/30 text-amber-600 dark:text-indigo-300 transition-all active:scale-95 hover-float"
+                            }, React.createElement(LucideIcon, { name: isDarkMode ? 'moon' : 'sun', size: 16 })),
 
                             // Botón importar
                             React.createElement('button', {
                                 key: 'import',
                                 onClick: handleImportClick,
-                                className: "p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float"
+                                className: "p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float"
                             }, [
-                                React.createElement(LucideIcon, { name: 'upload', size: 18 }),
+                                React.createElement(LucideIcon, { name: 'upload', size: 16 }),
                                 React.createElement('input', {
                                     type: "file",
                                     accept: ".xlsx,.csv",
@@ -136,15 +136,15 @@ function renderApp(props) {
                             React.createElement('button', {
                                 key: 'export',
                                 onClick: () => exportToExcel(inventory, shift),
-                                className: "p-2.5 rounded-xl bg-green-600 text-white shadow-md shadow-green-200 dark:shadow-green-900/40 transition-all active:scale-95 hover-float"
-                            }, React.createElement(LucideIcon, { name: 'file-spreadsheet', size: 18 })),
+                                className: "p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-green-600 text-white shadow-md shadow-green-200 dark:shadow-green-900/40 transition-all active:scale-95 hover-float"
+                            }, React.createElement(LucideIcon, { name: 'file-spreadsheet', size: 16 })),
 
                             // Botón configuración
                             React.createElement('button', {
                                 key: 'settings',
                                 onClick: () => setSettingsOpen(true),
-                                className: "p-2.5 rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float"
-                            }, React.createElement(LucideIcon, { name: 'settings', size: 18 }))
+                                className: "p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-600 dark:text-stone-300 transition-all active:scale-95 hover-float"
+                            }, React.createElement(LucideIcon, { name: 'settings', size: 16 }))
                         ])
                     ]),
 

@@ -76,10 +76,10 @@ function renderEditModal(props) {
                 }, React.createElement(LucideIcon, { name: 'x', size: 20 }))
             ]),
 
-            // Formulario (scrollable)
+            // Formulario (scrollable) - espaciado más compacto en móvil
             React.createElement('div', {
                 key: 'form',
-                className: "flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar"
+                className: "flex-1 overflow-y-auto p-4 sm:p-6 space-y-2.5 sm:space-y-4 no-scrollbar"
             }, [
                 // Fila: Tamaño + Económico
                 React.createElement('div', { key: 'row1', className: "grid grid-cols-2 gap-3" }, [

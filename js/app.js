@@ -324,10 +324,10 @@ function App() {
     const currentDocks = inventory[currentShift].docks;
     const currentYard = inventory[currentShift].yard;
 
-    // Clases CSS reutilizables para inputs
-    const inputClass = "w-full px-5 py-4 bg-stone-100/50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 focus:bg-white dark:focus:bg-stone-950 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-700 dark:text-stone-200 font-bold ring-4 ring-transparent focus:ring-indigo-100 dark:focus:ring-indigo-900/30 outline-none transition-all placeholder:text-stone-300 dark:placeholder:text-stone-600";
+    // Clases CSS reutilizables para inputs (más compactos en móvil)
+    const inputClass = "w-full px-3 py-2.5 sm:px-5 sm:py-4 bg-stone-100/50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 focus:bg-white dark:focus:bg-stone-950 border border-stone-200 dark:border-stone-700 rounded-xl sm:rounded-2xl text-sm sm:text-base text-stone-700 dark:text-stone-200 font-bold ring-4 ring-transparent focus:ring-indigo-100 dark:focus:ring-indigo-900/30 outline-none transition-all placeholder:text-stone-300 dark:placeholder:text-stone-600";
 
-    const selectClass = "w-full px-5 py-4 bg-stone-100/50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 focus:bg-white dark:focus:bg-stone-950 border border-stone-200 dark:border-stone-700 rounded-2xl text-stone-700 dark:text-stone-200 font-bold ring-4 ring-transparent focus:ring-indigo-100 dark:focus:ring-indigo-900/30 outline-none appearance-none cursor-pointer transition-all pr-12";
+    const selectClass = "w-full px-3 py-2.5 sm:px-5 sm:py-4 bg-stone-100/50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 focus:bg-white dark:focus:bg-stone-950 border border-stone-200 dark:border-stone-700 rounded-xl sm:rounded-2xl text-sm sm:text-base text-stone-700 dark:text-stone-200 font-bold ring-4 ring-transparent focus:ring-indigo-100 dark:focus:ring-indigo-900/30 outline-none appearance-none cursor-pointer transition-all pr-10 sm:pr-12";
 
     // ═══════════════════════════════════════════════════════════════════════
     // RENDERIZADO - Ver archivo app-render.js para el JSX
