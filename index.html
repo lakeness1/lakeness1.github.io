@@ -2,6 +2,23 @@
 <html lang="es">
 
 <head>
+    <!-- Script para evitar flash de tema claro cuando el usuario tiene tema oscuro -->
+    <script>
+        (function () {
+            // Desactivar restauración automática del scroll del navegador
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+            // Aplicar tema oscuro inmediatamente si corresponde
+            try {
+                var theme = localStorage.getItem('lake_logistica_theme_v22');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || (!theme && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) { }
+        })();
+    </script>
     <!-- ═══════════════════════════════════════════════════════════════════════
          LOGÍSTICA LAKENESS - INVENTARIO NEXXUS
          ═══════════════════════════════════════════════════════════════════════

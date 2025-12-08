@@ -73,10 +73,10 @@ function renderApp(props) {
                     React.createElement('div', { key: 'title-row', className: "flex items-center justify-between" }, [
                         // Logo y título
                         React.createElement('div', { key: 'left', className: "flex items-center gap-3" }, [
+                            // Icono decorativo (sin función)
                             React.createElement('div', {
                                 key: 'icon',
-                                onClick: () => setCleanerOpen(true),
-                                className: "bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200 dark:shadow-indigo-900/50 hover-float transition-all"
+                                className: "bg-indigo-600 text-white p-2.5 rounded-xl shadow-md shadow-indigo-200 dark:shadow-indigo-900/50"
                             }, React.createElement(LucideIcon, { name: 'clipboard-list', size: 20 })),
 
                             React.createElement('div', { key: 'text' }, [

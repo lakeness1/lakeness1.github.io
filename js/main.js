@@ -41,6 +41,9 @@
  * Usa React 18 createRoot API para renderizado concurrente.
  */
 document.addEventListener('DOMContentLoaded', function () {
+    // Forzar scroll al inicio para evitar posiciones aleatorias al recargar
+    window.scrollTo(0, 0);
+
     // Obtener el elemento contenedor
     const rootElement = document.getElementById('root');
 

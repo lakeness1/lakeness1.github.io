@@ -36,10 +36,10 @@ function renderEditModal(props) {
         onClick: closeModalAnimated,
         className: `fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 ${isClosingModal ? 'animate-fade-out' : 'animate-fade-in'}`
     }, [
-        // Overlay
+        // Overlay con blur animado
         React.createElement('div', {
             key: 'overlay',
-            className: "absolute inset-0 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md"
+            className: `absolute inset-0 bg-white/80 dark:bg-stone-950/80 ${isClosingModal ? 'animate-overlay-out' : 'animate-overlay-in'}`
         }),
 
         // Contenedor del modal
@@ -241,7 +241,7 @@ function renderCleanerModal(isClosing, closeAnimated, handleClean) {
     }, [
         React.createElement('div', {
             key: 'overlay',
-            className: "absolute inset-0 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md"
+            className: `absolute inset-0 bg-white/80 dark:bg-stone-950/80 ${isClosing ? 'animate-overlay-out' : 'animate-overlay-in'}`
         }),
         React.createElement('div', {
             key: 'content',
@@ -307,7 +307,7 @@ function renderSettingsModal(isClosing, closeAnimated) {
     }, [
         React.createElement('div', {
             key: 'overlay',
-            className: "absolute inset-0 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md"
+            className: `absolute inset-0 bg-white/80 dark:bg-stone-950/80 ${isClosing ? 'animate-overlay-out' : 'animate-overlay-in'}`
         }),
         React.createElement('div', {
             key: 'content',
@@ -369,7 +369,7 @@ function renderSheetSelector(sheetList, handleSelection, onClose) {
     }, [
         React.createElement('div', {
             key: 'overlay',
-            className: "absolute inset-0 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md"
+            className: "absolute inset-0 bg-white/80 dark:bg-stone-950/80 animate-overlay-in"
         }),
         React.createElement('div', {
             key: 'content',
