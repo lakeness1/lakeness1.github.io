@@ -1,9 +1,60 @@
-import React from 'https://esm.sh/react@18.2.0';
-import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
-import App from './App.js';
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * PUNTO DE ENTRADA DE LA APLICACIÓN
+ * Logística Lakeness - Inventario Nexxus
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Este archivo inicializa la aplicación React cuando el DOM está listo.
+ * También configura el tema claro/oscuro basado en las preferencias guardadas.
+ */
 
-console.log('Main.js loaded and running');
+// ═══════════════════════════════════════════════════════════════════════════
+// INICIALIZACIÓN DEL TEMA
+// ═══════════════════════════════════════════════════════════════════════════
 
-// Render
-const root = createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
+/**
+ * Configura el tema inicial basado en:
+ * 1. Preferencia guardada en localStorage
+ * 2. Preferencia del sistema operativo
+ * 3. Por defecto: tema claro
+ */
+(function initTheme() {
+    try {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.classList.add('dark');
+        }
+    } catch (e) {
+        // Si falla localStorage, continuar con tema claro por defecto
+        console.warn('No se pudo cargar preferencia de tema:', e);
+    }
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDERIZADO DE LA APLICACIÓN
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Espera a que el DOM esté completamente cargado antes de renderizar.
+ * Usa React 18 createRoot API para renderizado concurrente.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtener el elemento contenedor
+    const rootElement = document.getElementById('root');
+
+    if (!rootElement) {
+        console.error('Error: No se encontró el elemento #root');
+        return;
+    }
+
+    // Crear raíz de React (React 18+)
+    const root = ReactDOM.createRoot(rootElement);
+
+    // Renderizar la aplicación
+    root.render(React.createElement(App));
+
+    console.log('🚀 Logística Lakeness - Inventario Nexxus v2.2.0');
+    console.log('📦 Aplicación iniciada correctamente');
+});

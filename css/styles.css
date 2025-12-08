@@ -12,7 +12,9 @@ body {
     scrollbar-width: none;
 }
 
-/* --- SISTEMA DE ANIMACIONES --- */
+/* --- SISTEMA DE ANIMACIONES COZY & AESTHETIC --- */
+
+/* Animaciones Básicas */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -69,7 +71,7 @@ body {
     }
 }
 
-/* Animación específica para el Modal en Móvil (Slide desde abajo) */
+/* Modal Bottom Sheet */
 @keyframes slideUpMobile {
     from {
         transform: translateY(100%);
@@ -90,7 +92,7 @@ body {
     }
 }
 
-/* Nuevas Animaciones Fluidas */
+/* Animaciones Fluidas Cozy */
 @keyframes float {
 
     0%,
@@ -103,6 +105,22 @@ body {
     }
 }
 
+@keyframes floatGentle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-3px) rotate(0.5deg);
+    }
+
+    75% {
+        transform: translateY(2px) rotate(-0.5deg);
+    }
+}
+
 @keyframes pulseSoft {
 
     0%,
@@ -112,8 +130,22 @@ body {
     }
 
     50% {
-        opacity: 0.8;
+        opacity: 0.85;
         transform: scale(0.98);
+    }
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.02);
+        opacity: 0.9;
     }
 }
 
@@ -161,59 +193,398 @@ body {
     }
 }
 
-/* Utility Classes */
+/* ✨ Nuevas Animaciones Cozy & Aesthetic ✨ */
+
+@keyframes gentleGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+
+    50% {
+        box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.15);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-2deg);
+    }
+
+    75% {
+        transform: rotate(2deg);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    70% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUpBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+        filter: blur(2px);
+    }
+
+    40% {
+        opacity: 0.8;
+        filter: blur(0);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(-3px) scale(1.01);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Animación de entrada suave para tarjetas */
+@keyframes cardAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes jelly {
+
+    0%,
+    100% {
+        transform: scale(1, 1);
+    }
+
+    25% {
+        transform: scale(0.95, 1.05);
+    }
+
+    50% {
+        transform: scale(1.05, 0.95);
+    }
+
+    75% {
+        transform: scale(0.97, 1.03);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes softBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-8px);
+    }
+
+    60% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 0 rgba(99, 102, 241, 0));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+@keyframes expandIn {
+    0% {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes heartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    10% {
+        transform: scale(1.1);
+    }
+
+    20% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.1);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+
+@keyframes swing {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+        transform-origin: top center;
+    }
+
+    20% {
+        transform: rotate(8deg);
+    }
+
+    40% {
+        transform: rotate(-6deg);
+    }
+
+    60% {
+        transform: rotate(4deg);
+    }
+
+    80% {
+        transform: rotate(-2deg);
+    }
+}
+
+@keyframes morphBg {
+
+    0%,
+    100% {
+        border-radius: 1.5rem;
+    }
+
+    50% {
+        border-radius: 2rem 1rem 2rem 1rem;
+    }
+}
+
+@keyframes subtleZoom {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes colorShift {
+
+    0%,
+    100% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(10deg);
+    }
+}
+
+/* Utility Animation Classes */
 .animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-scale-in {
-    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .animate-fade-out {
-    animation: fadeOut 0.2s ease-in forwards;
+    animation: fadeOut 0.25s ease-in forwards;
 }
 
 .animate-scale-out {
-    animation: scaleOut 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: scaleOut 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: floatGentle 4s ease-in-out infinite;
 }
 
 .animate-pulse-soft {
-    animation: pulseSoft 2s ease-in-out infinite;
+    animation: pulseSoft 3s ease-in-out infinite;
+}
+
+.animate-breathe {
+    animation: breathe 4s ease-in-out infinite;
 }
 
 .animate-slide-in-right {
-    animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-slide-in-left {
-    animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-bounce-in {
-    animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-pop-in {
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-jelly {
+    animation: jelly 0.6s ease-in-out;
+}
+
+.animate-glow {
+    animation: gentleGlow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-soft-bounce {
+    animation: softBounce 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-swing {
+    animation: swing 1s ease-in-out;
+}
+
+.animate-rotate-in {
+    animation: rotateIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Modal Bottom Sheet Classes */
 .mobile-sheet-enter {
-    animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideUpMobile 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .mobile-sheet-exit {
-    animation: slideDownMobile 0.3s ease-in forwards;
+    animation: slideDownMobile 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Delays */
+/* Animation Delays (staggered) */
 .delay-0 {
     animation-delay: 0ms;
 }
 
+.delay-50 {
+    animation-delay: 50ms;
+}
+
 .delay-100 {
     animation-delay: 100ms;
+}
+
+.delay-150 {
+    animation-delay: 150ms;
 }
 
 .delay-200 {
@@ -224,11 +595,145 @@ body {
     animation-delay: 300ms;
 }
 
+.delay-400 {
+    animation-delay: 400ms;
+}
+
 .delay-500 {
     animation-delay: 500ms;
 }
 
-/* Hover Effects */
+/* Hover Effects Cozy */
 .hover-float:hover {
-    animation: float 2s ease-in-out infinite;
+    transform: translateY(-4px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-glow:hover {
+    animation: gentleGlow 1.5s ease-in-out infinite;
+}
+
+.hover-wiggle:hover {
+    animation: wiggle 0.4s ease-in-out;
+}
+
+.hover-pop:hover {
+    animation: popIn 0.3s ease-out forwards;
+}
+
+.hover-jelly:hover {
+    animation: jelly 0.5s ease-in-out;
+}
+
+/* Smooth Transitions for Interactive Elements */
+.smooth-all {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smooth-transform {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.smooth-opacity {
+    transition: opacity 0.3s ease-out;
+}
+
+.smooth-colors {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Card Hover Enhancement */
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Press Effect */
+.btn-press:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-out;
+}
+
+/* Icon Spin */
+.icon-spin {
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon-spin:hover {
+    transform: rotate(180deg);
+}
+
+/* Gradient Shimmer Effect */
+.shimmer-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg,
+            transparent 20%,
+            rgba(255, 255, 255, 0.08) 40%,
+            rgba(255, 255, 255, 0.08) 60%,
+            transparent 80%);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Ripple Effect Container */
+.ripple-container {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Cozy Shadow on Hover */
+.cozy-shadow {
+    transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cozy-shadow:hover {
+    box-shadow:
+        0 10px 30px -10px rgba(0, 0, 0, 0.1),
+        0 20px 60px -20px rgba(99, 102, 241, 0.1);
+}
+
+/* Dark mode cozy shadow */
+.dark .cozy-shadow:hover {
+    box-shadow:
+        0 10px 30px -10px rgba(0, 0, 0, 0.4),
+        0 20px 60px -20px rgba(99, 102, 241, 0.2);
+}
+
+/* Aesthetic Border Glow */
+.border-glow {
+    position: relative;
+}
+
+.border-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, #6366f1, #a855f7, #ec4899, #6366f1);
+    background-size: 300% 300%;
+    animation: shimmer 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.border-glow:hover::before {
+    opacity: 0.6;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
 }
