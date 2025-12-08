@@ -27,6 +27,10 @@ function renderEditModal(props) {
     const isYard = editingSlot?.type === 'yard';
     const statuses = isYard ? YARD_STATUSES : DOCK_STATUSES;
 
+    // Determinar si mostrar los sellos (solo para Frenteada y Cargada)
+    const statusNorm = (formData.status || '').toLowerCase();
+    const showSeals = statusNorm === 'frenteada' || statusNorm === 'cargada';
+
     return React.createElement('div', {
         key: 'edit-modal',
         onClick: closeModalAnimated,
@@ -42,7 +46,7 @@ function renderEditModal(props) {
         React.createElement('div', {
             key: 'content',
             onClick: e => e.stopPropagation(),
-            className: `relative w-full sm:max-w-md bg-white dark:bg-stone-900 sm:rounded-[2.5rem] shadow-2xl overflow-hidden ${isClosingModal ? 'sm:animate-scale-out mobile-sheet-exit' : 'sm:animate-scale-in mobile-sheet-enter'} sm:max-h-[85vh] sm:h-auto h-[calc(100dvh-24px)] rounded-t-[2rem] sm:rounded-[2.5rem] flex flex-col`
+            className: `relative w-full sm:max-w-md bg-white dark:bg-stone-900 sm:rounded-[2.5rem] shadow-2xl overflow-hidden ${isClosingModal ? 'sm:animate-scale-out mobile-sheet-exit' : 'sm:animate-scale-in mobile-sheet-enter'} sm:max-h-[85vh] sm:h-auto max-h-[65dvh] rounded-t-[2rem] sm:rounded-[2.5rem] flex flex-col`
         }, [
             // Handle de arrastre (móvil)
             React.createElement('div', {
@@ -129,8 +133,8 @@ function renderEditModal(props) {
                     })
                 ]),
 
-                // Fila: Sellos
-                React.createElement('div', { key: 'seals', className: "grid grid-cols-2 gap-3" }, [
+                // Fila: Sellos (solo visible si el estado es Frenteada o Cargada)
+                showSeals && React.createElement('div', { key: 'seals', className: "grid grid-cols-2 gap-3 animate-fade-in" }, [
                     // Sello Izquierdo
                     React.createElement('div', { key: 'seal1' }, [
                         React.createElement('label', {
