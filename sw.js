@@ -109,6 +109,19 @@ function getFileByPath(path) {
         }
     }
 
+    // Aggressive Deep Search Fallback
+    // If the file is requested in the wrong folder (e.g. root instead of data/), let's just find ANY file with this name.
+    const filenameMatch = lowerPath.split('/').pop();
+    if (filenameMatch) {
+        for (const key in gameFiles) {
+            const keyFileName = key.toLowerCase().split('/').pop();
+            if (keyFileName === filenameMatch) {
+                console.warn('SW Aggressive Fallback mapped:', tryPath, '->', key);
+                return gameFiles[key];
+            }
+        }
+    }
+
     // If we request a directory, like game/fonts/ returning nothing
     return null;
 }
@@ -152,6 +165,7 @@ self.addEventListener('fetch', (event) => {
                         else if (path.endsWith('.m4a')) contentType = 'audio/mp4';
                         else if (path.endsWith('.woff') || path.endsWith('.woff2')) contentType = 'font/woff2';
                         else if (path.endsWith('.txt')) contentType = 'text/plain';
+                        else if (path.endsWith('.csv')) contentType = 'text/csv';
                         else contentType = 'application/octet-stream';
                     }
 
@@ -174,7 +188,7 @@ self.addEventListener('fetch', (event) => {
                         });
                     });
 
-                    return new Response('404 Not Found', { status: 404 });
+                    return new Response('File Not Uploaded', { status: 404, statusText: "File Not Uploaded By User" });
                 }
             })()
         );
