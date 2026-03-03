@@ -109,6 +109,16 @@ function getFileByPath(path) {
         }
     }
 
+    // Ultimate hardcode for game_messages.csv (Hendrix Localization sync XHR fail logic)
+    if (lowerPath.includes('messages.csv')) {
+        for (const key in gameFiles) {
+            if (key.toLowerCase().includes('messages.csv')) {
+                console.warn('SW Hendrix specific map:', tryPath, '->', key);
+                return gameFiles[key];
+            }
+        }
+    }
+
     // Aggressive Deep Search Fallback
     // If the file is requested in the wrong folder (e.g. root instead of data/), let's just find ANY file with this name.
     const filenameMatch = lowerPath.split('/').pop();
