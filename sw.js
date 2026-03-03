@@ -1,24 +1,70 @@
-const CACHE_NAME = 'rpgm-emu-v1';
+const CACHE_NAME = 'rpgm-emu-v3';
 let gameFiles = {};
 
+const DB_NAME = 'RpgmEmulatorDB';
+const STORE_NAME = 'FileStore';
+
+function getDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (event) => {
+            event.target.result.createObjectStore(STORE_NAME);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveFilesToDB(files) {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(files, 'gameFilesMap');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+}
+
+async function loadFilesFromDB() {
+    const db = await getDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const request = tx.objectStore(STORE_NAME).get('gameFilesMap');
+        request.onsuccess = () => resolve(request.result || {});
+        request.onerror = () => reject(tx.error);
+    });
+}
+
 self.addEventListener('install', (event) => {
-    // Force SW to become active immediately
     self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(
+        (async () => {
+            await self.clients.claim();
+            gameFiles = await loadFilesFromDB();
+            console.log('SW: Restored ' + Object.keys(gameFiles).length + ' files from IDB.');
+        })()
+    );
 });
 
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'LOAD_GAME_FILES') {
-        gameFiles = event.data.files; // Store the map as in-memory variable
-        console.log('SW: Received ' + Object.keys(gameFiles).length + ' files');
+        gameFiles = event.data.files;
+        console.log('SW: Received ' + Object.keys(gameFiles).length + ' files, saving to IDB...');
 
-        // Notify the client that we're done
-        if (event.ports && event.ports[0]) {
-            event.ports[0].postMessage({ success: true, count: Object.keys(gameFiles).length });
-        }
+        saveFilesToDB(gameFiles).then(() => {
+            if (event.ports && event.ports[0]) {
+                event.ports[0].postMessage({ success: true, count: Object.keys(gameFiles).length });
+            }
+        }).catch(err => {
+            console.error('SW IDB Save Error:', err);
+            // Fallback: still notify ready even if IDB failed, maybe memory will hold
+            if (event.ports && event.ports[0]) {
+                event.ports[0].postMessage({ success: true, count: Object.keys(gameFiles).length });
+            }
+        });
     }
 });
 
@@ -74,6 +120,15 @@ self.addEventListener('fetch', (event) => {
     if (url.pathname.includes('/rpgm-game/')) {
         event.respondWith(
             (async () => {
+                // Rescue from IDB if memory was wiped by Safari sleep
+                if (Object.keys(gameFiles).length === 0) {
+                    console.warn('SW: Memory wiped, retrieving from IndexedDB...');
+                    gameFiles = await loadFilesFromDB().catch(() => ({}));
+                    if (Object.keys(gameFiles).length === 0) {
+                        return new Response('404 Not Found (MEMORY LOST)', { status: 404 });
+                    }
+                }
+
                 // Find file in our memory map
                 const pathParts = url.pathname.split('/rpgm-game/');
                 const path = pathParts[pathParts.length - 1]; // Content after /rpgm-game/

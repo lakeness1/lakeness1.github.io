@@ -11,13 +11,19 @@ let swRegistration = null;
 async function registerSW() {
     if ('serviceWorker' in navigator) {
         try {
-            swRegistration = await navigator.serviceWorker.register('sw.js', { scope: '/' });
+            const regs = await navigator.serviceWorker.getRegistrations();
+            for (let reg of regs) {
+                // If it's an old version, unregister it
+                if (!reg.active || reg.active.scriptURL.indexOf('sw.js?v=') === -1) {
+                    await reg.unregister();
+                }
+            }
+            // Use cache busting to make sure Safari downloads the new code
+            swRegistration = await navigator.serviceWorker.register(`sw.js?v=${Date.now()}`, { scope: '/' });
             console.log('Service Worker registered with scope:', swRegistration.scope);
 
             // Wait for SW to be ready and active
             await navigator.serviceWorker.ready;
-
-            // If the SW is waiting, we might need to skip waiting, but ideally handled in SW
         } catch (error) {
             console.error('Service Worker registration failed:', error);
             statusText.textContent = 'Tristemente el navegador no soporta la ejecución offline requerida.';
