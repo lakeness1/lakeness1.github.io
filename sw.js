@@ -76,14 +76,11 @@ self.addEventListener('fetch', (event) => {
                         else if (path.endsWith('.ogg')) contentType = 'audio/ogg';
                         else if (path.endsWith('.m4a')) contentType = 'audio/mp4';
                         else if (path.endsWith('.woff') || path.endsWith('.woff2')) contentType = 'font/woff2';
+                        else if (path.endsWith('.txt')) contentType = 'text/plain';
                         else contentType = 'application/octet-stream';
                     }
 
                     responseHeaders.set('Content-Type', contentType);
-
-                    // Header for RPG Maker MZ potential SharedArrayBuffer usage
-                    responseHeaders.set('Cross-Origin-Embedder-Policy', 'require-corp');
-                    responseHeaders.set('Cross-Origin-Opener-Policy', 'same-origin');
 
                     // Cache-Control to prevent browser from caching the blob URLs unexpectedly
                     responseHeaders.set('Cache-Control', 'no-store, no-cache, must-revalidate');
@@ -94,6 +91,14 @@ self.addEventListener('fetch', (event) => {
                     });
                 } else {
                     console.warn('SW: File not found in in-memory map:', path);
+
+                    // Notify clients
+                    self.clients.matchAll().then(clients => {
+                        clients.forEach(client => {
+                            client.postMessage({ type: 'MISSING_FILE', path: path });
+                        });
+                    });
+
                     return new Response('404 Not Found', { status: 404 });
                 }
             })()
