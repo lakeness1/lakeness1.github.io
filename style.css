@@ -1,0 +1,217 @@
+:root {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-color: #3b82f6;
+    --accent-hover: #60a5fa;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at top right, #1e3a8a, transparent), 
+                      radial-gradient(circle at bottom left, #0f172a, #000);
+    color: var(--text-color);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glass UI Layer */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.5s ease;
+    padding: 20px;
+}
+
+#ui-layer:not(.active) {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header p {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.icon-placeholder {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5));
+}
+
+.upload-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Hide actual file input */
+input[type="file"] {
+    display: none;
+}
+
+/* Custom Upload Button */
+.upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.upload-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    font-size: 1.5rem;
+}
+
+.btn-text {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.status {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    min-height: 20px;
+    transition: color 0.3s;
+}
+
+/* Start Button */
+.start-btn {
+    background: linear-gradient(135deg, var(--accent-color), #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+}
+
+.start-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.5);
+}
+
+.start-btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #475569;
+    box-shadow: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Iframe adjustments */
+#game-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    background: #000;
+    z-index: 5;
+}
+
+/* Close Button Floating over Iframe */
+#close-game-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: background 0.2s;
+}
+
+#close-game-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
