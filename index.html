@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>RPG Maker Emulator</title>
     <!-- iOS PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="RPG Emulator">
     <link rel="apple-touch-icon" href="icon.png">
-    
+
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="ui-layer" class="active">
         <div class="glass-panel">
@@ -21,7 +24,7 @@
                 <h1>RPG Emulator</h1>
                 <p>Selecciona la carpeta de tu juego RPG Maker MV/MZ</p>
             </div>
-            
+
             <div class="upload-section">
                 <label for="game-folder" class="upload-btn">
                     <span class="btn-text">Seleccionar Carpeta</span>
@@ -29,10 +32,12 @@
                 </label>
                 <!-- Ojo: webkitdirectory permite seleccionar carpetas y recibir todos sus archivos -->
                 <input type="file" id="game-folder" webkitdirectory directory multiple>
-                
+
                 <p id="status-text" class="status">Esperando juego...</p>
+                <p style="font-size: 11px; color: #64748b; margin-top: 5px; font-weight: bold; letter-spacing: 1px;">
+                    EMULATOR v4.0 (Anti-Crash Edition)</p>
             </div>
-            
+
             <button id="start-btn" class="start-btn hidden" disabled>Iniciar Juego</button>
         </div>
     </div>
@@ -45,4 +50,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -113,9 +113,11 @@ function getFileByPath(path) {
     // If the file is requested in the wrong folder (e.g. root instead of data/), let's just find ANY file with this name.
     const filenameMatch = lowerPath.split('/').pop();
     if (filenameMatch) {
+        const sanitize = n => n.replace(/[^a-z0-9.]/gi, '');
+        const sanitizedMatch = sanitize(filenameMatch);
         for (const key in gameFiles) {
             const keyFileName = key.toLowerCase().split('/').pop();
-            if (keyFileName === filenameMatch) {
+            if (sanitize(keyFileName) === sanitizedMatch) {
                 console.warn('SW Aggressive Fallback mapped:', tryPath, '->', key);
                 return gameFiles[key];
             }
