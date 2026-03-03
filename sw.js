@@ -43,6 +43,26 @@ function getFileByPath(path) {
         }
     }
 
+    // Fallback for Safari audio: if game requests .m4a but only .ogg exists
+    if (lowerPath.endsWith('.m4a')) {
+        const altPath = lowerPath.substring(0, lowerPath.length - 4) + '.ogg';
+        for (const key in gameFiles) {
+            if (key.toLowerCase() === altPath) {
+                return gameFiles[key];
+            }
+        }
+    }
+
+    // Vice versa if requests .ogg but only .m4a exists
+    if (lowerPath.endsWith('.ogg')) {
+        const altPath = lowerPath.substring(0, lowerPath.length - 4) + '.m4a';
+        for (const key in gameFiles) {
+            if (key.toLowerCase() === altPath) {
+                return gameFiles[key];
+            }
+        }
+    }
+
     // If we request a directory, like game/fonts/ returning nothing
     return null;
 }

@@ -44,26 +44,28 @@ folderInput.addEventListener('change', async (event) => {
 
     // Verify if it is an RPG Maker project (look for index.html at root level or near it)
     // webkitRelativePath format is "FolderName/path/to/file.ext"
-    let hasIndex = false;
     let rootPath = null;
+    let hasSystemJson = false;
 
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (file.name === 'index.html') {
-            hasIndex = true;
+        // Buscamos system.json, que SIEMPRE está en la carpeta data/ de RPG Maker
+        if (file.name.toLowerCase() === 'system.json') {
             const pathParts = file.webkitRelativePath.split('/');
-            pathParts.pop();
-            let candidate = pathParts.join('/');
-            if (candidate !== '') candidate += '/';
-
-            if (rootPath === null || candidate.length < rootPath.length) {
+            if (pathParts.length >= 2 && pathParts[pathParts.length - 2].toLowerCase() === 'data') {
+                hasSystemJson = true;
+                pathParts.pop(); // quitar System.json
+                pathParts.pop(); // quitar data
+                let candidate = pathParts.join('/');
+                if (candidate !== '') candidate += '/';
                 rootPath = candidate;
+                break;
             }
         }
     }
 
-    if (!hasIndex) {
-        statusText.textContent = 'No se encontró el archivo index.html. Asegúrate de seleccionar la carpeta del juego exportado de RPG Maker.';
+    if (!hasSystemJson) {
+        statusText.textContent = 'No se encontró data/System.json. Asegúrate de seleccionar la carpeta base del juego (donde esté game.rmmzproject o la carpeta www) que contenga la carpeta data/.';
         statusText.style.color = '#ff6b6b';
         return;
     }
@@ -165,25 +167,32 @@ function sendMessageToSW(message) {
 }
 
 // Global missing file listener to help debug problems
+const missingFilesContainer = document.createElement('div');
+missingFilesContainer.style.position = 'fixed';
+missingFilesContainer.style.top = '60px';
+missingFilesContainer.style.left = '10px';
+missingFilesContainer.style.zIndex = '9999';
+missingFilesContainer.style.pointerEvents = 'none';
+missingFilesContainer.style.display = 'flex';
+missingFilesContainer.style.flexDirection = 'column';
+missingFilesContainer.style.gap = '5px';
+document.body.appendChild(missingFilesContainer);
+
 navigator.serviceWorker.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'MISSING_FILE') {
         const p = document.createElement('div');
         p.style.color = '#ff6b6b';
-        p.style.position = 'fixed';
-        p.style.bottom = '10px';
-        p.style.left = '10px';
-        p.style.zIndex = '9999';
         p.style.background = 'rgba(0,0,0,0.85)';
         p.style.padding = '8px 12px';
         p.style.borderRadius = '8px';
         p.style.fontFamily = 'monospace';
         p.style.fontSize = '12px';
         p.style.border = '1px solid #ff6b6b';
-        p.style.pointerEvents = 'none';
-        p.textContent = `Error 404: ❌ Archivo faltante "${event.data.path}"`;
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 8000);
+        p.textContent = `404 Mismatch: "${event.data.path}"`;
+        missingFilesContainer.appendChild(p);
+
         console.error('File not found by emulator:', event.data.path);
+        setTimeout(() => p.remove(), 12000);
     }
 });
 
